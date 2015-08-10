@@ -16,30 +16,38 @@
 #    ectory variables allow customization of these locations
 ##############################################################################
 
+#-----------------------------------------------------------------------------
+# Set environment
+#-----------------------------------------------------------------------------
 # global directoriesls()
 projdir  <- "." # assume script is run from project directory
 dwnlddir <- "." # assume data is relative to current directory
 workdir  <- "." # work is peformed in this directory
 datadir  <- "." # ultimate location of data
 
-# change in to project directory
-olddir <- getwd()
-setwd(projdir)
+# change into project directory
+if(projdir != '.'){
+    olddir <- getwd()
+    setwd(projdir)
+}
 
+#-----------------------------------------------------------------------------
+# Download source data if they do not already exist
+#-----------------------------------------------------------------------------
 # file names
 codebook_fname <- "human_activity_recognition_codebook.html"
 download_data_fname <- "human_activity_recognition_data.zip"
 
 # source data URI
-codebook_source <- "http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones"
-data_source     <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+data_source_desc <- "http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones"
+data_source      <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 
 # download source
-dwnld_dest <- file.path(dwnlddir,codebook_fname)
+dwnld_dest <- file.path(dwnlddir,data_source_desc)
 if(!file.exists(dwnld_dest)){
-    download.file(codebook_source, dwnld_dest)
+    download.file(data_source_desc, dwnld_dest)
 }else{
-    print("Codebook file already exists. Skipping download ...")
+    print("Data source description file already exists. Skipping download ...")
 }
 
 dwnld_dest <- file.path(dwnlddir,download_data_fname)
@@ -61,4 +69,6 @@ data.dir.name <- dirname(arclist[[1]][[1]])
 datadir <- file.path(datadir,data.dir.name)
 
 # return to original directory
-setwd(olddir)
+if(projdir != '.'){
+    setwd(olddir)
+}
