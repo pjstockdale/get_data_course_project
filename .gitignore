@@ -36,3 +36,4 @@ human_activity_recognition_codebook.html
 *.docx
 *.bak
 *.zip
+.Rproj.user
