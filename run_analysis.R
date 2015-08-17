@@ -113,10 +113,8 @@ subj.id <- read.table(fname)
 
 # 1.3.2  Add this vector as column to X_train data frame, labelled Subject
 X_train_bak1 <- X_train              # for mistake recovery
-#X_train$subject_ID <- subj.id
-
-#X_train <- X_train_bak1
 X_train <- cbind(X_train, subj.id, make.row.names = FALSE)
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 1.4    Assign descriptive activity values to each observation
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -147,12 +145,12 @@ if( identical(df1, df2) ){
 
 # 1.4.4  Add the descriptive english labels to X_train data frame labelled activity
 X_train_bak2 <- X_train           # for mistake recovery
-X_train$acty_label <- acty.df$acty_label
+X_train <- cbind(X_train, acty.df$acty_label, make.row.names = FALSE)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 1.5 Environment clean up
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-rm(df1, df2, subj.id, acty.id, acty.df, X_train_bak, X_train_bak2)
+rm(df1, df2, subj.id, acty.id, acty.df, X_train_bak1, X_train_bak2)
 
 
 #-----------------------------------------------------------------------------
@@ -188,8 +186,8 @@ subj.id <- read.table(fname)
 
 # 2.3.2  Add this vector as column to X_test data frame, labelled Subject
 X_test_bak1 <- X_test                  # for mistake recovery
-X_test$subject_ID <- subj.id
-
+#X_test$subject_ID <- subj.id
+X_test <- cbind(X_test, subj.id, make.row.names = FALSE)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 2.4    Assign descriptive activity values to each observation
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -216,7 +214,7 @@ if( identical(df1, df2) ){
 
 # 2.4.4  Add the descriptive english labels to X_test data frame labelled activity
 X_test_bak2 <- X_test                  # for mistake recovery
-X_test$acty_label <- acty.df$acty_label
+X_test <- cbind(X_test, acty.df$acty_label, make.row.names = FALSE)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 2.5 Environment clean up
