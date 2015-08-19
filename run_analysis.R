@@ -232,27 +232,32 @@ rm(df1, df2, subj.id, acty.id, acty.label, acty.df, X_test_bak1, X_test_bak2)
 #-----------------------------------------------------------------------------
 # 3. Combine X_train and X_test datasets
 #-----------------------------------------------------------------------------
-# 3.1   Add a variable to each data set to denote if the data came from the
-#       training and testing data set
-#X_train_bak3 <- X_train
-#X_train$data_set <- rep("train",times=nrow(X_train))
-#
-#X_test_bak3 <- X_test
-#X_test <- cbind(X_test <- rep("test",times=nrow(X_test))
-#
-#X_test_bak1 <- X_test
-# Trying to concatenate the two data sets as they are will result in an error
-# since train and test share the same row names for rows 1 thru nrow(X_test). 
-# rbind() will produce a "dupicate 'row.names' are not allowed". Change the 
-# row names in X_test to be different than those in X_train
-#row.names(X_train) <- 1:nrow(X_train)
-#row.names(X_test) <- (nrow(X_train)+1):(nrow(X_train)+nrow(X_test))
-
-
-# 3.2   append the test data set to the training data set
+# 3.1   append the test data set to the training data set
 data.comb <- rbind(X_train, X_test)  
 
+#-----------------------------------------------------------------------------
+# 4.1   Extract the column variables involving means 
+#-----------------------------------------------------------------------------
+# 4.1.1 Identify the column indices for these variables
+mean.cols <- grep("mean",names(data.comb), perl=TRUE)
 
+# 4.1.2 Add indicies for subject_ID and activity variable
+all.mean.cols <- c(1, 2, mean.cols)
+
+# 4.1.3 build data frame based on these columns
+mean.df <- data.comb[, all.mean.cols]
+
+#-----------------------------------------------------------------------------
+# 4.2   Extract the column variables involving std deviations
+#-----------------------------------------------------------------------------
+# 4.2.1 Identify the column indices for these variables
+std.cols <- grep("std",names(data.comb), perl=TRUE)
+
+# 4.2.2 Add indicies for subject_ID and activity variable
+all.std.cols <- c(1, 2, std.cols)
+
+# 4.2.3 build data frame based on these columns
+std.df <- data.comb[, all.std.cols]
 #-----------------------------------------------------------------------------
 # complete data processing
 #-----------------------------------------------------------------------------

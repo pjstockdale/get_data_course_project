@@ -58,8 +58,32 @@ joins before additional filtering.
 3. Combine X_train and X_test datasets
 3.1   Add a variable to each data set to denote if the data came from the
       training and testing data set
-3.2
 
+4. Extracts only the measurements on the mean and standard deviation for each 
+   measurement.
+4.1   Extract the column variables involving means 
+4.1.1 Identify the column indices for these variables
+4.1.2 Add indicies for subject_ID and activity variable
+4.1.3 build data frame based on these columns
+4.2   Extract the column variables involving std deviations 
+4.2.1 Identify the column indices for these variables
+4.2.2 Add indicies for subject_ID and activity variable
+4.2.3 build data frame based on these columns
 
+5. creates a second, independent with the average of each variable for each 
+   activity and each subject.
 
+6. Conform data set to tidy data principles
 
+The features_info.txt file included in the data package identify two types of
+variables involving a mean.
+1. 33 derived variables denoted mean() along with 33 variables corresponding 
+   variables identifying a standard deviation, std(). 
+2. 13 variables denoting a measurement that is comprised of a weighted average
+   of component measurements, meanFreq() without corresponding standard deviation
+   measurements. 
+In these variables, these variables describe a single conceptual measurement 
+represented by a combination of components. The word mean in the label describes
+the method of derivation of a single value rather than identifying a representative
+value for a set of distinct measurements. Consequently, the 13 variables 
+identified with _meanFreq() were excluded from the final data set
