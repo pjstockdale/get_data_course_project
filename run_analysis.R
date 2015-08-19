@@ -25,6 +25,9 @@ dwnlddir <- "." # assume data is relative to current directory
 workdir  <- "." # work is peformed in this directory
 datadir  <- "." # ultimate location of data
 
+# Load dplyr package
+library(dplyr)
+
 # change into project directory
 if(projdir != '.'){
     olddir <- getwd()
@@ -105,33 +108,22 @@ var.names <- read.delim2(fname, header=FALSE, sep=" ")
 colnames(X_train) <- var.names$V2
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# 1.3    Assign subject ID values to each observation
+# 1.3    Assign descriptive activity values to each observation
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# 1.3.1  Read the file subject_train.txt into a vector
-fname <- file.path(srcdir, "subject_train.txt")
-subj.id <- read.table(fname)
-
-# 1.3.2  Add this vector as column to X_train data frame, labelled Subject
-X_train_bak1 <- X_train              # for mistake recovery
-X_train <- cbind(X_train, subj.id, make.row.names = FALSE)
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# 1.4    Assign descriptive activity values to each observation
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# 1.4.1  Read the activity code value file, y_train.txt
+# 1.3.1  Read the activity code value file, y_train.txt
 #        make it a data frame for later convenience
 fname <- file.path(srcdir,"y_train.txt")
 acty.id <- data.frame(read.table(fname, header=FALSE))
 names(acty.id) <- c("acty_ID")
 
-# 1.4.2  Cross each activity code value to english label. Read in the activity
+# 1.3.2  Cross each activity code value to english label. Read in the activity
 #        code value cross reference file activity_labels.txt
 fname <- file.path(datadir,"activity_labels.txt")
 acty.label <- read.table(fname, header=FALSE)
 names(acty.label) <- c("acty_ID", "acty_label")
 
 
-# 1.4.3  Merge activity code to english label file
+# 1.3.3  Merge activity code to english label file
 acty.df <- merge(acty.id, acty.label, by="acty_ID")
 
 # Verify merge is correct count occurances of each acty.id
@@ -143,9 +135,22 @@ if( identical(df1, df2) ){
     print("Verifying build of activity cross reference table ... FAIL")
 }
 
-# 1.4.4  Add the descriptive english labels to X_train data frame labelled activity
+# 1.3.4  Add the descriptive english labels to X_train data frame labelled activity
 X_train_bak2 <- X_train           # for mistake recovery
-X_train <- cbind(X_train, acty.df$acty_label, make.row.names = FALSE)
+X_train <- cbind(acty.df$acty_label, X_train)
+names(X_train)[1] <- "activity"
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 1.4    Assign subject ID values to each observation
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 1.4.1  Read the file subject_train.txt into a vector
+fname <- file.path(srcdir, "subject_train.txt")
+subj.id <- read.table(fname)
+
+# 1.4.2  Add this vector as column to X_train data frame, labelled Subject
+X_train_bak1 <- X_train              # for mistake recovery
+X_train <- cbind( subj.id, X_train)
+names(X_train)[1] <- "subject_id"
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 1.5 Environment clean up
@@ -178,29 +183,18 @@ X_test <- read.table(fname, sep="", header=FALSE)
 colnames(X_test) <- var.names$V2
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# 2.3    Assign subject ID values to each observation
+# 2.3    Assign descriptive activity values to each observation
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# 2.3.1  Read the file subject_test.txt into a vector
-fname <- file.path(srcdir, "subject_test.txt")
-subj.id <- read.table(fname)
-
-# 2.3.2  Add this vector as column to X_test data frame, labelled Subject
-X_test_bak1 <- X_test                  # for mistake recovery
-#X_test$subject_ID <- subj.id
-X_test <- cbind(X_test, subj.id, make.row.names = FALSE)
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# 2.4    Assign descriptive activity values to each observation
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# 2.4.1  Read the activity code value file, y_test.txt
+# 2.3.1  Read the activity code value file, y_test.txt
 #        make it a data frame for later convenience
 fname <- file.path(srcdir,"y_test.txt")
 acty.id <- data.frame(read.table(fname, header=FALSE))
 names(acty.id) <- c("acty_ID")
 
-# 2.4.2  Cross each activity code value to english label. use the data frame
-#        acty.label created and 1.4.2
+# 2.3.2  Cross each activity code value to english label. use the data frame
+#        acty.label created and 1.3.2
 
-# 2.4.3  Merge activity code to english label file
+# 2.3.3  Merge activity code to english label file
 acty.df <- merge(acty.id, acty.label, by="acty_ID")
 
 # Verify merge is correct count occurances of each acty.id
@@ -212,9 +206,23 @@ if( identical(df1, df2) ){
     print("Verifying build of activity cross reference table ... FAIL")
 }
 
-# 2.4.4  Add the descriptive english labels to X_test data frame labelled activity
+# 2.3.4  Add the descriptive english labels to X_test data frame labelled activity
 X_test_bak2 <- X_test                  # for mistake recovery
-X_test <- cbind(X_test, acty.df$acty_label, make.row.names = FALSE)
+X_test <- cbind(acty.df$acty_label, X_test)
+names(X_test)[1] <- "activity"
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 2.4    Assign subject ID values to each observation
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 2.4.1  Read the file subject_test.txt into a vector
+fname <- file.path(srcdir, "subject_test.txt")
+subj.id <- read.table(fname)
+
+# 2.4.2  Add this vector as column to X_test data frame, labelled Subject
+X_test_bak1 <- X_test                  # for mistake recovery
+#X_test$subject_ID <- subj.id
+X_test <- cbind(subj.id, X_test)
+names(X_test)[1] <- "subject_id"
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 2.5 Environment clean up
@@ -226,20 +234,23 @@ rm(df1, df2, subj.id, acty.id, acty.label, acty.df, X_test_bak1, X_test_bak2)
 #-----------------------------------------------------------------------------
 # 3.1   Add a variable to each data set to denote if the data came from the
 #       training and testing data set
-X_train$data_set <- rep("train",times=nrow(X_train))
-X_test$data_set <- rep("test",times=nrow(X_test))
-
-X_test_bak1 <- X_test
+#X_train_bak3 <- X_train
+#X_train$data_set <- rep("train",times=nrow(X_train))
+#
+#X_test_bak3 <- X_test
+#X_test <- cbind(X_test <- rep("test",times=nrow(X_test))
+#
+#X_test_bak1 <- X_test
 # Trying to concatenate the two data sets as they are will result in an error
 # since train and test share the same row names for rows 1 thru nrow(X_test). 
 # rbind() will produce a "dupicate 'row.names' are not allowed". Change the 
 # row names in X_test to be different than those in X_train
-row.names(X_train) <- 1:nrow(X_train)
-row.names(X_test) <- (nrow(X_train)+1):(nrow(X_train)+nrow(X_test))
+#row.names(X_train) <- 1:nrow(X_train)
+#row.names(X_test) <- (nrow(X_train)+1):(nrow(X_train)+nrow(X_test))
 
 
 # 3.2   append the test data set to the training data set
-data.comb <- rbind(X_train, X_test, make.row.names=FALSE)  
+data.comb <- rbind(X_train, X_test)  
 
 
 #-----------------------------------------------------------------------------

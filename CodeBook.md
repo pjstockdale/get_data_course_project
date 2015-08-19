@@ -43,15 +43,15 @@ joins before additional filtering.
 1.2    Assign meaningful variable names (column headers)
 1.2.1  Read the variable descriptor file, features.txt
 1.2.2  Combine with X_train to set variable names
-1.3    Assign subject ID values to each observation
-1.3.1  Read the file subject_train.txt into a vector
-1.3.2  Add this vector as column to X_train data frame, labelled Subject_ID
-1.4    Assign descriptive activity values to each observation
-1.4.1  Read the activity code value file, y_train.txt
-1.4.2  Cross each activity code value to english label. Read in the activity
+1.3    Assign descriptive activity values to each observation
+1.3.1  Read the activity code value file, y_train.txt
+1.3.2  Cross each activity code value to english label. Read in the activity
        code value cross reference file activity_labels.txt
-1.4.3  Merge activity code to english label file
-1.4.4  Add the descriptive english labels to X_train data frame labelled acty_label
+1.3.3  Merge activity code to english label file
+1.3.4  Add the descriptive english labels to X_train data frame labelled activity
+1.4    Assign subject ID values to each observation
+1.4.1  Read the file subject_train.txt into a vector
+1.4.2  Add this vector as column to X_train data frame, labelled Subject_ID
 
 2. Repeat steps A through D for the test set of data, X_test
 
@@ -60,7 +60,6 @@ joins before additional filtering.
       training and testing data set
 3.2
 
-So, I will want to create a data frame with the values from X_train.txt and
-apply the column headers from features.txt
+
 
 
