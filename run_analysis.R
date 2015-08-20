@@ -152,7 +152,7 @@ names(X_train)[1:2] <- acty.idx.label
 #        variable representing subject to a factor
 fname <- file.path(srcdir, "subject_train.txt")
 subj.id <- read.table(fname)
-subj.id$V1 <- as.factor(subj.id$V1)
+#subj.id$V1 <- as.factor(subj.id$V1)
 
 # 1.4.2  Add this vector as column to X_train data frame, labelled Subject
 X_train_bak1 <- X_train              # for mistake recovery
@@ -229,7 +229,7 @@ names(X_test)[1:2] <- acty.idx.label
 #        variable representing subject to a factor
 fname <- file.path(srcdir, "subject_test.txt")
 subj.id <- read.table(fname)
-subj.id$V1 <- as.factor(subj.id$V1)
+#subj.id$V1 <- as.factor(subj.id$V1)
 
 # 2.4.2  Add this vector as column to X_test data frame, labelled Subject
 X_test_bak1 <- X_test                  # for mistake recovery
@@ -271,14 +271,17 @@ mean.std.df <- data.comb[, mean.std.vars]
 # complete data processing
 #-----------------------------------------------------------------------------
 
-mean.std.sorted <- mean.std.df[order(mean.std.df$subject_id, mean.std.df$activity),]
-mean.std.sorted <- mean.std.df[order(mean.std.df$subject_id, mean.std.df$acty_ID),]
-mean.std.sorted <- mean.std.df[order(mean.std.df$acty_ID, mean.std.df$subject_id),]
+#mean.std.sorted <- mean.std.df[order(mean.std.df$subject_id, mean.std.df$activity),]
+#mean.std.sorted <- mean.std.df[order(mean.std.df$subject_id, mean.std.df$acty_ID),]
+#mean.std.sorted <- mean.std.df[order(mean.std.df$acty_ID, mean.std.df$subject_id),]
 
-# aggregate results
-mean.df.aggr <- aggregate(mean.std.sorted[,-(1:2)], by=list( subject_ID=mean.std.sorted$subject_id), mean)
+# aggregate results by subject_ID and activity
+#mean.df.aggr <- aggregate(mean.std.sorted[,-(1:2)], by=list( subject_ID=mean.std.sorted$subject_id), mean)
+mean.df.aggr <- aggregate(mean.std.df[,-(1:2)], by=list( subject_ID=mean.std.df$subject_id, activity=mean.std.df$activity), mean)
+#mean.df.aggr.1 <- aggregate(mean.std.sorted[,-(1:2)], by=list( subject_ID=mean.std.sorted$subject_id, activity=mean.std.sorted$activity), mean)
+#mean.df.aggr.2 <- aggregate(mean.std.sorted[,-(1:2)], by=list( subject_ID=mean.std.sorted$subject_id, activity=mean.std.sorted$acty_ID), mean)
 
-mean.df.final <- mean.df.aggr[order(mean.df.aggr$subject_ID, mean.df.aggr$activity),]
+mean.df.final <- mean.df.aggr[order(mean.df.aggr$subject_ID, mean.df.aggr$acty_ID),]
 
 #-----------------------------------------------------------------------------
 # Environment cleanup
