@@ -48,6 +48,22 @@ The project creates one R script called run_analysis.R that does the following.
 5.  From the data set in step 4, creates a second, independent tidy data set 
     with the average of each variable for each activity and each subject.
 
+### Data Set Description
+
+
+The features_info.txt file included in the data package identify two types of
+variables involving a mean.
+1. 33 derived variables denoted mean() along with 33 variables corresponding 
+   variables identifying a standard deviation, std(). 
+2. 13 variables denoting a measurement that is comprised of a weighted average
+   of component measurements, meanFreq() without corresponding standard deviation
+   measurements. 
+In these variables, these variables describe a single conceptual measurement 
+represented by a combination of components. The word mean in the label describes
+the method of derivation of a single value rather than identifying a representative
+value for a set of distinct measurements. Consequently, the 13 variables 
+identified with _meanFreq() were excluded from the final data set
+
 ### References
 
 [1]  Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra and Jorge L. Reyes-Ortiz. 

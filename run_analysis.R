@@ -25,6 +25,10 @@ dwnlddir <- "." # assume data is relative to current directory
 workdir  <- "." # work is peformed in this directory
 datadir  <- "." # ultimate location of data
 
+# usefull standard variables
+acty.idx.label <- c("activity", "acty_ID")
+subj.idx.label <- "subject_id"
+
 # Load dplyr package
 library(dplyr)
 
@@ -122,40 +126,43 @@ fname <- file.path(datadir,"activity_labels.txt")
 acty.label <- read.table(fname, header=FALSE)
 names(acty.label) <- c("acty_ID", "acty_label")
 
-
-# 1.3.3  Merge activity code to english label file
-acty.df <- merge(acty.id, acty.label, by="acty_ID")
+# 1.3.3  Merge activity code to english label file, use dplyr package
+#acty.df.1 <- merge(acty.id, acty.label, by="acty_ID", sort=FALSE)
+acty.df.1 <- left_join(acty.id, acty.label, by="acty_ID")
 
 # Verify merge is correct count occurances of each acty.id
-df1 <- acty.df %>% count(acty_ID)
-df2 <- acty.id %>% count(acty_ID)
-if( identical(df1, df2) ){
-    print("Verifying build of activity cross reference table ... OK")
-}else{
-    print("Verifying build of activity cross reference table ... FAIL")
-}
+#df1 <- acty.df %>% count(acty_ID)
+#df2 <- acty.id %>% count(acty_ID)
+#if( identical(df1, df2) ){
+#    print("Verifying build of activity cross reference table ... OK")
+#}else{
+#    print("Verifying build of activity cross reference table ... FAIL")
+#}
 
 # 1.3.4  Add the descriptive english labels to X_train data frame labelled activity
 X_train_bak2 <- X_train           # for mistake recovery
-X_train <- cbind(acty.df$acty_label, X_train)
-names(X_train)[1] <- "activity"
+#X_train <- cbind(acty.df.1$acty_label, X_train)
+X_train <- cbind(acty.df.1$acty_label, acty.df.1$acty_ID, X_train)
+names(X_train)[1:2] <- acty.idx.label
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 1.4    Assign subject ID values to each observation
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# 1.4.1  Read the file subject_train.txt into a vector
+# 1.4.1  Read the file subject_train.txt into a vector and coerce the integer
+#        variable representing subject to a factor
 fname <- file.path(srcdir, "subject_train.txt")
 subj.id <- read.table(fname)
+subj.id$V1 <- as.factor(subj.id$V1)
 
 # 1.4.2  Add this vector as column to X_train data frame, labelled Subject
 X_train_bak1 <- X_train              # for mistake recovery
 X_train <- cbind( subj.id, X_train)
-names(X_train)[1] <- "subject_id"
+names(X_train)[1] <- subj.idx.label
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 1.5 Environment clean up
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-rm(df1, df2, subj.id, acty.id, acty.df, X_train_bak1, X_train_bak2)
+#rm(df1, df2, subj.id, acty.id, acty.df, X_train_bak1, X_train_bak2)
 
 
 #-----------------------------------------------------------------------------
@@ -194,40 +201,47 @@ names(acty.id) <- c("acty_ID")
 # 2.3.2  Cross each activity code value to english label. use the data frame
 #        acty.label created and 1.3.2
 
-# 2.3.3  Merge activity code to english label file
-acty.df <- merge(acty.id, acty.label, by="acty_ID")
+# 2.3.3  Merge activity code to english label file, use dplyr package
+#acty.df.2 <- merge(acty.id, acty.label, by="acty_ID", all=TRUE, sort=FALSE)
+acty.df.2 <- left_join(acty.id, acty.label, by="acty_ID")
 
 # Verify merge is correct count occurances of each acty.id
-df1 <- acty.df %>% count(acty_ID)
-df2 <- acty.id %>% count(acty_ID)
-if( identical(df1, df2) ){
-    print("Verifying build of activity cross reference table ... OK")
-}else{
-    print("Verifying build of activity cross reference table ... FAIL")
-}
+#df1 <- acty.df %>% count(acty_ID)
+#df2 <- acty.id %>% count(acty_ID)
+#if( identical(df1, df2) ){
+#    print("Verifying build of activity cross reference table ... OK")
+#}else{
+#    print("Verifying build of activity cross reference table ... FAIL")
+#}
 
 # 2.3.4  Add the descriptive english labels to X_test data frame labelled activity
 X_test_bak2 <- X_test                  # for mistake recovery
-X_test <- cbind(acty.df$acty_label, X_test)
-names(X_test)[1] <- "activity"
+#X_test <- X_test_bak2
+#X_test <- cbind(acty.df$acty_label, X_test)
+X_test <- cbind(acty.df.2$acty_label, acty.df.2$acty_ID, X_test)
+names(X_test)[1:2] <- acty.idx.label
+
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 2.4    Assign subject ID values to each observation
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# 2.4.1  Read the file subject_test.txt into a vector
+# 2.4.1  Read the file subject_test.txt into a vector and coerce the integer
+#        variable representing subject to a factor
 fname <- file.path(srcdir, "subject_test.txt")
 subj.id <- read.table(fname)
+subj.id$V1 <- as.factor(subj.id$V1)
 
 # 2.4.2  Add this vector as column to X_test data frame, labelled Subject
 X_test_bak1 <- X_test                  # for mistake recovery
+#X_test <- X_test_bak1
 #X_test$subject_ID <- subj.id
 X_test <- cbind(subj.id, X_test)
-names(X_test)[1] <- "subject_id"
+names(X_test)[1] <- subj.idx.label
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 2.5 Environment clean up
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-rm(df1, df2, subj.id, acty.id, acty.label, acty.df, X_test_bak1, X_test_bak2)
+#rm(df1, df2, subj.id, acty.id, acty.label, acty.df, X_test_bak1, X_test_bak2)
 
 #-----------------------------------------------------------------------------
 # 3. Combine X_train and X_test datasets
@@ -236,30 +250,38 @@ rm(df1, df2, subj.id, acty.id, acty.label, acty.df, X_test_bak1, X_test_bak2)
 data.comb <- rbind(X_train, X_test)  
 
 #-----------------------------------------------------------------------------
-# 4.1   Extract the column variables involving means 
+# 4.1   Extract the column variables involving means and standard deviation
 #-----------------------------------------------------------------------------
-# 4.1.1 Identify the column indices for these variables
-mean.cols <- grep("mean",names(data.comb), perl=TRUE)
+# 4.1.1 Identify the column indices for mean variables (33 vars)
+mean.cols <- grep("mean[(]",names(data.comb), ignore.case=TRUE)
 
-# 4.1.2 Add indicies for subject_ID and activity variable
-all.mean.cols <- c(1, 2, mean.cols)
+# 4.1.1 Identify the column indices for standard deviation variables (33 vars)
+std.cols <- grep("std[(]",names(data.comb), ignore.case=TRUE)
+
+# 4.1.2 Combine mean and std dev columns along with subject_ID and activity columns
+#       although not strictly necessary, we will sort the column numbers so 
+#       that the original order of the columns will be maintained (68 vars)
+mean.std.vars <- sort( c( 1, 2, 3, mean.cols, std.cols) )
 
 # 4.1.3 build data frame based on these columns
-mean.df <- data.comb[, all.mean.cols]
+#       expecting 10299 obs with 68 variables each
+mean.std.df <- data.comb[, mean.std.vars]
 
-#-----------------------------------------------------------------------------
-# 4.2   Extract the column variables involving std deviations
-#-----------------------------------------------------------------------------
-# 4.2.1 Identify the column indices for these variables
-std.cols <- grep("std",names(data.comb), perl=TRUE)
-
-# 4.2.2 Add indicies for subject_ID and activity variable
-all.std.cols <- c(1, 2, std.cols)
-
-# 4.2.3 build data frame based on these columns
-std.df <- data.comb[, all.std.cols]
 #-----------------------------------------------------------------------------
 # complete data processing
+#-----------------------------------------------------------------------------
+
+mean.std.sorted <- mean.std.df[order(mean.std.df$subject_id, mean.std.df$activity),]
+mean.std.sorted <- mean.std.df[order(mean.std.df$subject_id, mean.std.df$acty_ID),]
+mean.std.sorted <- mean.std.df[order(mean.std.df$acty_ID, mean.std.df$subject_id),]
+
+# aggregate results
+mean.df.aggr <- aggregate(mean.std.sorted[,-(1:2)], by=list( subject_ID=mean.std.sorted$subject_id), mean)
+
+mean.df.final <- mean.df.aggr[order(mean.df.aggr$subject_ID, mean.df.aggr$activity),]
+
+#-----------------------------------------------------------------------------
+# Environment cleanup
 #-----------------------------------------------------------------------------
 
 # return to original directory
