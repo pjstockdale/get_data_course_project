@@ -277,11 +277,24 @@ mean.std.df <- data.comb[, mean.std.vars]
 
 # aggregate results by subject_ID and activity
 #mean.df.aggr <- aggregate(mean.std.sorted[,-(1:2)], by=list( subject_ID=mean.std.sorted$subject_id), mean)
-mean.df.aggr <- aggregate(mean.std.df[,-(1:2)], by=list( subject_ID=mean.std.df$subject_id, activity=mean.std.df$activity), mean)
+mean.std.aggr <- aggregate(mean.std.df[,-(1:2)], by=list( subject_ID=mean.std.df$subject_id, activity=mean.std.df$activity), mean)
 #mean.df.aggr.1 <- aggregate(mean.std.sorted[,-(1:2)], by=list( subject_ID=mean.std.sorted$subject_id, activity=mean.std.sorted$activity), mean)
 #mean.df.aggr.2 <- aggregate(mean.std.sorted[,-(1:2)], by=list( subject_ID=mean.std.sorted$subject_id, activity=mean.std.sorted$acty_ID), mean)
 
-mean.df.final <- mean.df.aggr[order(mean.df.aggr$subject_ID, mean.df.aggr$acty_ID),]
+# order result set by subject ID and activity
+mean.std.sorted <- mean.std.aggr[order(mean.std.aggr$subject_ID, mean.std.aggr$acty_ID),]
+
+# Write out tidy data set
+# Drop activity_ID column
+mean.std.tidy <- mean.std.sorted[, -3]
+
+#-----------------------------------------------------------------------------
+# Make data set tidy
+#-----------------------------------------------------------------------------
+
+# some work here ???
+
+# write out data set for repository
 
 #-----------------------------------------------------------------------------
 # Environment cleanup
