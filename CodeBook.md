@@ -109,10 +109,16 @@ specific variable names
 1. The final data set contains the arithmetic mean of each of the variables indexed
 3 through 68 grouped by the subject_ID and activity variables
 
-2. The file Y_*.txt in the
+2. The file Y_\*.txt in the
 /train or /test data directories contain a list of activity codes assigned to
-each observations in the x_*.txt data set. The corresponding english language
-assignment, as listed in the activity_labels.txt file was matched to each code in Y_*.txt and assigned to each observation
+each observations in the x_\*.txt data set. the code values in Y_\*.txt correspond
+to each observation in the X_*.txt file. The english language description of
+the activity performed during each observation was attached by matching the 
+activity code, as listed in the activity_labels.txt file, to the corresponding
+code in Y_\*.txt file which was then assigned to each corresponding observation
+
+3. See README.md for a complete summary of all steps taken to produce the 
+final output data set
 
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------

@@ -271,7 +271,7 @@ mean.std.tidy <- mean.std.sorted[, -3]
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 5.3.1 output to text file
 fname <- file.path(projdir,out.file.name)
-write.table(mean.std.tidy, fname, quote=FALSE)
+write.table(mean.std.tidy, fname, sep=" ", quote=FALSE, row.names=FALSE)
 
 #-----------------------------------------------------------------------------
 # 6. Script environment cleanup

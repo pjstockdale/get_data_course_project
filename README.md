@@ -1,12 +1,13 @@
-# Getting and Cleaning Data Course Project
-(github repo: get_data_course_project)
+## README for Getting and Cleaning Data Course Project
 
 John Hopkins Data Specialization on Coursera  
 Getting and Cleaning Data (2015-08-03) 
 
 This is the project repository for the Getting and Cleaning Data class on Coursera  
-Author: PJ Stockdale
-Revision: 2015-08-21
+
+Author: PJ Stockdale<br />
+Revision: 2015-08-21<br />
+github repo: pjstockdale/get_data_course_project
 
 ### Background
 
@@ -62,7 +63,9 @@ The project creates one R script called run_analysis.R that does the following.
     with the average of each variable for each activity and each subject.
     [Step 5.2](#5.2), [5.3](#5.3)
 
-### Final Data Set Description
+### Resultant data set HAR_mean_std_tidy.txt
+
+#### Description
 
 The final output data set is named **HAR_mean_std_tidy.txt**.
 It consists of 68 variables and 180 observations laid out as follows
@@ -80,11 +83,14 @@ over which the remaining 66 variables were summarized.
 4. Data file can be read into R using
    mean.std.in <- read.table("HAR_mean_std_tidy.txt", sep=" ", quote="")
 
+##### Exclusions
 
 The features_info.txt file included in the data package, UCI HAR Dataset.zip,
-identify two types of variables involving a mean and standard deviation.
+identifies two sets of variables involving the term mean and/or standard deviation.
+
 1. 33 derived variables denoted mean() along with 33 variables corresponding 
    variables identifying a standard deviation, std(). 
+
 2. 13 variables denoting a measurement that is comprised of a weighted average
    of component measurements, meanFreq() without corresponding standard deviation
    measurements. 
@@ -96,76 +102,75 @@ value for a set of distinct measurements. Consequently, the 13 variables
 identified with _meanFreq() were excluded from the final data set
 
 
-### Comments on processing script run_analysis.R
+### Notes on processing script, run_analysis.R
 
-#### Notes:
-Script will attempt to determine if HAR data set is already available locally
+#### General
+
+1. Script will attempt to determine if HAR data set is already available locally
 If the data is not found, the script will attempt to download the files from
 the URL found in the variable data_source_desc (for the description of data
 set) and data_source (for the zip file).
 If the data is found the script prints a message and skip the download
 
-The acty_ID field which is a numerical index field identifying the type of activity
+2. The acty_ID field which is a numerical index field identifying the type of activity
 is retained on the the data set through step 5.3 to facilitate ordering. The
 variable is dropped in the final tidy set
 
-The file features.txt contains the column headers for the 561 element data set
+3. The file features.txt contains the column headers for the 561 element data set
 Features, in this study, appear to be the columns of the data set
 
-The file X_train.txt contains the actual computed measurements. each row in the
+4. The file X_\*.txt found within the ./train and ./test subdirectories contain
+the actual computed measurements. each row in the
 data set correspondes to a particular observation. *NOTE* the data set appears
-to be positionally indexed rather than explicetely indext. That is, one row, 
+to be positionally indexed rather than explicetely indexed. That is, 
 row 1 corresponds to observation 1 and so on. In order to link other dimensional
 variables to the individual observations, *DO NOT* reorder the data set before linking
 
-features.txt is a two column data file containing. Col 1 is a sequential number
+5. features.txt is a two column data file containing. Col 1 is a sequential number
 that appears to corresponds to the column number for that variable in the
-X_train.txt file. Col 2 identifies the calculation/variable name. Col 1 and
+X_\*.txt file. Col 2 identifies the calculation/variable name. Col 1 and
 Col 2 are separated by one space
 
-The files in Inertial Signals/ directories contain the actual, unprocessed 
+6. The files in Inertial Signals/ directories contain the actual, unprocessed 
 data measurements. Not used in this analysis.
 
-Data is partitioned into two data sets a traning set contained in source
+7. Data is partitioned into two data sets a traning set contained in source
 data directory /train and test data in directory /test
 
-
-This project deals with the data contained in X_train.txt file. This file
+8. This project deals with the data contained in X_\*.txt file. This file
 contains a list of 561 columns of computed numerical data
 
-
-The file activity_labels.txt is a code value file assigning an ID to each
+9. The file activity_labels.txt is a code value file assigning an ID to each
 of the six activities. this table is located in the data source parent dir
 
-The file y_train.txt is a row based (positional) foreign key table that links
+10. The file y_*.txt is a row based (positional) foreign key table that links
 each of the six activites to the corresponding row in the data file 
-(X_train.txt)
+(X_\*.txt)
 
-the file subject_train.txt contains the numbers identifying the subjects in
+11. the file subject_*.txt contains the numbers identifying the subjects in
 the study. The file is positionally indexed so that row 10 in subject_train.txt
 corresponds the the data contained in the 10th row of x_train.txt
 
-Since the data files are positionally indexed, we need to perform all of the 
+12. Since the data files are positionally indexed, perform all of the 
 joins before additional filtering.
 
-
-
-The features_info.txt file included in the data package identify two types of
+13. The features_info.txt file included in the data package identify two types of
 variables involving a mean.
-1. 33 derived variables denoted mean() along with 33 variables corresponding 
-   variables identifying a standard deviation, std(). 
+
+  * 33 derived variables denoted mean() along with 33 variables corresponding 
+     variables identifying a standard deviation, std(). 
    
-2. 13 variables denoting a measurement that is comprised of a weighted average
-   of component measurements, meanFreq() without corresponding standard deviation
-   measurements. 
+  * 13 variables denoting a measurement that is comprised of a weighted average
+     of component measurements, meanFreq() without corresponding standard deviation
+     measurements. 
    
-In these variables, these variables describe a single conceptual measurement 
+    In these variables, these variables describe a single conceptual measurement 
 represented by a combination of components. The word mean in the label describes
 the method of derivation of a single value rather than identifying a representative
 value for a set of distinct measurements. Consequently, the 13 variables 
 identified with _meanFreq() were excluded from the final data set
 
-##### Decomposition
+#### Variable Name Decomposition
 
 It would be possible to break down each variable (column) name into additional
 subcomponents that could be made into factor variables. For example, the variable
@@ -182,7 +187,7 @@ variables and, if additional grouping type analysis was necessary, I would
 argue that it would be more effective to return to the original data.
 
 
-#### Processing steps
+### Processing steps
 
 1. Download data file if needed<br />
 1.1    Assign local filenames<br />
