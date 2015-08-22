@@ -1,89 +1,196 @@
+###Code book for Getting and Cleaning Data Course Project
 
-The file features.txt contains the column headers for the 561 element data set
-Features, in this study, appear to be the columns of the data set
+The final tidy data set **HAR_mean_std_tidy.txt** contains 180 observations across 68
+variables. Variables 1 and 2 are 
 
-The file X_train.txt contains the actual computed measurements. each row in the
-data set correspondes to a particular observation. *NOTE* the data set appears
-to be positionally indexed rather than explicetely indext. That is, one row, 
-row 1 corresponds to observation 1 and so on. In order to link other dimensional
-variables to the individual observations, *DO NOT* reorder the data set before linking
+#### Factors and Variables
 
-features.txt is a two column data file containing. Col 1 is a sequential number
-that appears to corresponds to the column number for that variable in the
-X_train.txt file. Col 2 identifies the calculation/variable name. Col 1 and
-Col 2 are separated by one space
+**Factor variables** - identifies the specific observation as a combination of
+the subject performing the activity and the activity performed.
 
-The files in Inertial Signals/ directories contain the actual, unprocessed 
-data measurements. Not used in this analysis.
+1: subject_ID
 
-Data is partitioned into two data sets a traning set contained in source
-data directory /train and test data in directory /test
+integer - subject_ID values range from 1-30 and identify a specific subject participating
+in the study. Taken from the suject_*.txt file in the respective /train or
+/test directories of the HAR data set
 
+2: activity
 
-This project deals with the data contained in X_train.txt file. This file
-contains a list of 561 columns of computed numerical data
+character - identifies the activity being performed. the value represents the
+english language statement of the activity such as WALKING and was taken from
+the activity_labels.txt file of the HAR data set. 
 
+* 1 WALKING<br />
+* 2 WALKING_UPSTAIRS<br />
+* 3 WALKING_DOWNSTAIRS<br />
+* 4 SITTING<br />
+* 5 STANDING<br />
+* 6 LAYING<br />
 
-The file activity_labels.txt is a code value file assigning an ID to each
-of the six activities. this table is located in the data source parent dir
+**Computed variables** - consist of the arithmetic mean of the computed statistic
+across groups identified by subject_ID and activity as follows
 
-The file y_train.txt is a row based (positional) foreign key table that links
-each of the six activites to the corresponding row in the data file 
-(X_train.txt)
+The variable names have been left as specified in the original data. The names
+there are already very descriptive and, given that this data set consists of a
+single calculation performed on each variable, the addition of an extra term 
+(such as AvgOf_[variable_name]) would not add additional information but would
+make the resultant variable names harder to read. Refer to the original codebook, **[features_info.txt](#ref1)**, for a more complete explanation of the meaning of the 
+specific variable names
 
-the file subject_train.txt contains the numbers identifying the subjects in
-the study. The file is positionally indexed so that row 10 in subject_train.txt
-corresponds the the data contained in the 10th row of x_train.txt
+3:   tBodyAcc-mean()-X <br />
+4:  tBodyAcc-mean()-Y<br />
+5: tBodyAcc-mean()-Z<br />
+6: tBodyAcc-std()-X<br />
+7: tBodyAcc-std()-Y<br />
+8: tBodyAcc-std()-Z<br />
+9: tGravityAcc-mean()-X<br />
+10: tGravityAcc-mean()-Y<br />
+11: tGravityAcc-mean()-Z<br />
+12: tGravityAcc-std()-X<br />
+13: tGravityAcc-std()-Y<br />
+14: tGravityAcc-std()-Z<br />
+15: tBodyAccJerk-mean()-X<br />
+16: tBodyAccJerk-mean()-Y<br />
+17: tBodyAccJerk-mean()-Z<br />
+18: tBodyAccJerk-std()-X<br />
+19: tBodyAccJerk-std()-Y<br />
+20: tBodyAccJerk-std()-Z<br />
+21: tBodyGyro-mean()-X<br />
+22: tBodyGyro-mean()-Y<br />
+23: tBodyGyro-mean()-Z<br />
+24: tBodyGyro-std()-X<br />
+25: tBodyGyro-std()-Y<br />
+26: tBodyGyro-std()-Z<br />
+27: tBodyGyroJerk-mean()-X<br />
+28: tBodyGyroJerk-mean()-Y<br />
+29: tBodyGyroJerk-mean()-Z<br />
+30: tBodyGyroJerk-std()-X<br />
+31: tBodyGyroJerk-std()-Y<br />
+32: tBodyGyroJerk-std()-Z<br />
+33: tBodyAccMag-mean()<br />
+34: tBodyAccMag-std()<br />
+35: tGravityAccMag-mean()<br />
+36: tGravityAccMag-std()<br />
+37: tBodyAccJerkMag-mean()<br />
+38: tBodyAccJerkMag-std()<br />
+39: tBodyGyroMag-mean()<br />
+40: tBodyGyroMag-std()<br />
+41: tBodyGyroJerkMag-mean()<br />
+42: tBodyGyroJerkMag-std()<br />
+43: fBodyAcc-mean()-X<br />
+44: fBodyAcc-mean()-Y<br />
+45: fBodyAcc-mean()-Z<br />
+46: fBodyAcc-std()-X<br />
+47: fBodyAcc-std()-Y<br />
+48: fBodyAcc-std()-Z<br />
+49: fBodyAccJerk-mean()-X<br />
+50: fBodyAccJerk-mean()-Y<br />
+51: fBodyAccJerk-mean()-Z<br />
+52: fBodyAccJerk-std()-X<br />
+53: fBodyAccJerk-std()-Y<br />
+54: fBodyAccJerk-std()-Z<br />
+55: fBodyGyro-mean()-X<br />
+56: fBodyGyro-mean()-Y<br />
+57: fBodyGyro-mean()-Z<br />
+58: fBodyGyro-std()-X<br />
+59: fBodyGyro-std()-Y<br />
+60: fBodyGyro-std()-Z<br />
+61: fBodyAccMag-mean()<br />
+62: fBodyAccMag-std()<br />
+63: fBodyBodyAccJerkMag-mean()<br />
+64: fBodyBodyAccJerkMag-std()<br />
+65: fBodyBodyGyroMag-mean()<br />
+66: fBodyBodyGyroMag-std()<br />
+67: fBodyBodyGyroJerkMag-mean()<br />
+68: fBodyBodyGyroJerkMag-std()<br />
 
-Since the data files are positionally indexed, we need to perform all of the 
-joins before additional filtering.
+####Transformations
 
-1. build a detailed X_train data set
-1.1    Read the file x_train.txt into a data frame
-1.2    Assign meaningful variable names (column headers)
-1.2.1  Read the variable descriptor file, features.txt
-1.2.2  Combine with X_train to set variable names
-1.3    Assign descriptive activity values to each observation
-1.3.1  Read the activity code value file, y_train.txt
-1.3.2  Cross each activity code value to english label. Read in the activity
-       code value cross reference file activity_labels.txt
-1.3.3  Merge activity code to english label file
-1.3.4  Add the descriptive english labels to X_train data frame labelled activity
-1.4    Assign subject ID values to each observation
-1.4.1  Read the file subject_train.txt into a vector
-1.4.2  Add this vector as column to X_train data frame, labelled Subject_ID
+1. The final data set contains the arithmetic mean of each of the variables indexed
+3 through 68 grouped by the subject_ID and activity variables
 
-2. Repeat steps A through D for the test set of data, X_test
+2. The file Y_*.txt in the
+/train or /test data directories contain a list of activity codes assigned to
+each observations in the x_*.txt data set. The corresponding english language
+assignment, as listed in the activity_labels.txt file was matched to each code in Y_*.txt and assigned to each observation
 
-3. Combine X_train and X_test datasets
-3.1   Add a variable to each data set to denote if the data came from the
-      training and testing data set
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 
-4. Extracts only the measurements on the mean and standard deviation for each 
-   measurement.
-4.1   Extract the column variables involving means 
-4.1.1 Identify the column indices for these variables
-4.1.2 Add indicies for subject_ID and activity variable
-4.1.3 build data frame based on these columns
-4.2   Extract the column variables involving std deviations 
-4.2.1 Identify the column indices for these variables
-4.2.2 Add indicies for subject_ID and activity variable
-4.2.3 build data frame based on these columns
+<a name="ref1">Feature_info.txt</a>
 
-5. creates a second, independent with the average of each variable for each 
-   activity and each subject.
+[1]  Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra and Jorge L. Reyes-Ortiz. 
+     Human Activity Recognition on Smartphones using a Multiclass Hardware-Friendly 
+     Support Vector Machine. International Workshop of Ambient Assisted Living (IWAAL 2012).
+     Vitoria-Gasteiz, Spain. Dec 2012
 
-6. Conform data set to tidy data principles
+Feature Selection 
 
-The features_info.txt file included in the data package identify two types of
-variables involving a mean.
-1. 33 derived variables denoted mean() along with 33 variables corresponding 
-   variables identifying a standard deviation, std(). 
-2. 13 variables denoting a measurement that is comprised of a weighted average
-   of component measurements, meanFreq() without corresponding standard deviation
-   measurements. 
-In these variables, these variables describe a single conceptual measurement 
-represented by a combination of components. The word mean in the label describes
-the method of derivation of a single value rather than identifying a representative
-value for a set of distinct measurements. Consequently, the 13 variables 
-identified with _meanFreq() were excluded from the final data set
+The features selected for this database come from the accelerometer and gyroscope
+3-axial raw signals tAcc-XYZ and tGyro-XYZ. These time domain signals 
+(prefix 't' to denote time) were captured at a constant rate of 50 Hz. Then 
+they were filtered using a median filter and a 3rd order low pass Butterworth 
+filter with a corner frequency of 20 Hz to remove noise. Similarly, the 
+acceleration signal was then separated into body and gravity acceleration 
+signals (tBodyAcc-XYZ and tGravityAcc-XYZ) using another low pass Butterworth 
+filter with a corner frequency of 0.3 Hz. 
+
+Subsequently, the body linear acceleration and angular velocity were derivd 
+in time to obtain Jerk signals (tBodyAccJerk-XYZ and tBodyGyroJerk-XYZ). Also 
+the magnitude of these three-dimensional signals were calculated using the 
+Euclidean norm (tBodyAccMag, tGravityAccMag, tBodyAccJerkMag, tBodyGyroMag, tBodyGyroJerkMag). 
+
+Finally a Fast Fourier Transform (FFT) was applied to some of these signals 
+producing fBodyAcc-XYZ, fBodyAccJerk-XYZ, fBodyGyro-XYZ, fBodyAccJerkMag, 
+fBodyGyroMag, fBodyGyroJerkMag. (Note the 'f' to indicate frequency domain signals). 
+
+These signals were used to estimate variables of the feature vector for each pattern:  
+'-XYZ' is used to denote 3-axial signals in the X, Y and Z directions.
+
+tBodyAcc-XYZ<br />
+tGravityAcc-XYZ<br />
+tBodyAccJerk-XYZ<br />
+tBodyGyro-XYZ<br />
+tBodyGyroJerk-XYZ<br />
+tBodyAccMag<br />
+tGravityAccMag<br />
+tBodyAccJerkMag<br />
+tBodyGyroMag<br />
+tBodyGyroJerkMag<br />
+fBodyAcc-XYZ<br />
+fBodyAccJerk-XYZ<br />
+fBodyGyro-XYZ<br />
+fBodyAccMag<br />
+fBodyAccJerkMag<br />
+fBodyGyroMag<br />
+fBodyGyroJerkMag<br />
+
+The set of variables that were estimated from these signals are: 
+
+mean(): Mean value<br />
+std(): Standard deviation<br />
+mad(): Median absolute deviation<br /> 
+max(): Largest value in array<br />
+min(): Smallest value in array<br />
+sma(): Signal magnitude area<br />
+energy(): Energy measure. Sum of the squares divided by the number of values.<br /> 
+iqr(): Interquartile range <br />
+entropy(): Signal entropy<br />
+arCoeff(): Autorregresion coefficients with Burg order equal to 4<br />
+correlation(): correlation coefficient between two signals<br />
+maxInds(): index of the frequency component with largest magnitude<br />
+meanFreq(): Weighted average of the frequency components to obtain a mean frequency<br />
+skewness(): skewness of the frequency domain signal <br />
+kurtosis(): kurtosis of the frequency domain signal <br />
+bandsEnergy(): Energy of a frequency interval within the 64 bins of the FFT of each window.<br />
+angle(): Angle between to vectors.<br />
+
+Additional vectors obtained by averaging the signals in a signal window sample. These are used on the angle() variable:
+
+gravityMean<br />
+tBodyAccMean<br />
+tBodyAccJerkMean<br />
+tBodyGyroMean<br />
+tBodyGyroJerkMean<br />
+
+The complete list of variables of each feature vector is available in 'features.txt'
